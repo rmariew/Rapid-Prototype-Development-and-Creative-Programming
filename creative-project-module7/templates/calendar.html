@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <meta charset='utf-8' />
+        
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+        <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+        <script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
+        <script src="https://static.cloudflareinsights.com/beacon.min.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+        <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../static/style.css">
+        <link href="{{ url_for('static', filename='calendar.css') }}" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='calendar2.css') }}">
+
+    </head>
+    
+    <body>
+       <nav class="navbar navbar-expand-lg" style="background-color: darkgreen; font-family: 'Shadows Into Light'; font-size: 150%">
+           <a class="navbar-brand" href="#">Plant Parenthood</a>
+           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+               <span class="navbar-toggler-icon"></span>
+           </button>
+           <div class="collapse navbar-collapse" id="navbarNav">
+               <ul class="navbar-nav">
+                   <li class="nav-item active">
+                       <a class="nav-link" href="{{ url_for('home_page') }}">Home </a>
+                   </li>
+                   <li class="nav-item">
+                       <a class="nav-link" href="{{ url_for('portfolio') }}">Portfolio</a>
+                   </li>
+                   <li class="nav-item">
+                       <a class="nav-link" href="{{ url_for('calendar') }}">Calendar</a>
+                   </li>
+                   <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('friends') }}">Friends</a>
+                   </li>
+                   <li class="nav-item">
+                       <a class="nav-link" href="{{ url_for('logout') }}"> Log Out </a>
+                   </li>
+               </ul>
+           </div>
+       </nav>
+        <h2 style = "text-align: center;"> Check the plant(s) to view their care calendar :) </h2>
+        <div class="checklist">
+            <form method="post" action="/process_form">
+                <div class="checklist-container">
+                    {% for plant in plants %}
+                    <div class="checklist-item">
+                        <input type="checkbox" id="{{ plant.id }}" name="items" value = "{{plant.id}}" />
+                        <label for="{{ plant.id }}"></label>
+                        <p>{{ plant.plnt_name }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                  <div class="center-container">
+                     <input type="submit" value="Submit">
+                 </div>
+            </form>
+        </div>
+    
+
+    </body>
+    
+    <body>
+        <div id='calendar'></div>
+    </body>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let calendarEl = document.getElementById('calendar');
+            let calendar = new FullCalendar.Calendar
+            (calendarEl, {
+
+
+                views: {
+                    listDay: { buttonText: 'list day' },
+                    listWeek: { buttonText: 'list week' },
+                },
+                headerToolbar: {
+                    start: 'title',
+                    end: 'today dayGridMonth,listWeek prev,next'
+                },
+                selectable: true,
+                dateClick: function(info) {
+                    calendar.changeView('listDay', info.dateStr);
+                },
+                eventDidMount: function(info) {
+                    var tooltip = new Tooltip(info.el, {
+                        title: info.event.extendedProps.description,
+                        placement: 'top',
+                        trigger: 'hover',
+                        container: 'body'
+                    });
+                },
+                events : [
+                    {% for event in events %}
+                        {% if event.id|string in checked_items %}
+                            {
+                                id : '{{event.id}}',
+                                title : '{{event.plnt_name}}',
+                                description: '{{event.plnt_care}}',
+                                start : '{{event.date_added}}',
+                                startRecur: '{{event.date_added}}',
+                                daysOfWeek: [{{event.day_of_week}}]
+                            },
+                        {% endif %}
+                    {% endfor %}
+                ],
+
+                eventColor: 'green',
+
+                dayMaxEvents: true, 
+            });
+
+            calendar.on('eventClick', function(info) {
+                alert(info.event.title + '\n' + info.event.extendedProps.description);
+            });
+
+            calendar.render()
+        });
+    </script>
+    
+</html>
+
+

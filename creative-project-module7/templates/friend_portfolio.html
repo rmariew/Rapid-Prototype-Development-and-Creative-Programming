@@ -1,0 +1,53 @@
+{% extends "layoutt.html" %}
+
+{% block title %} Friend's Plant Portfolio {% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url('https://zippermiranda-capitalcactus.codio.io/PlantParenthood/static/img/portfolio.jpg');
+        background-size: cover;
+    }
+
+    center {
+        align-items: center;
+        font-family: 'Shadows Into Light';
+        font-size: 20px;
+        color: black;
+        text-shadow: 2px 2px 6px white;
+    }
+
+    /* Styles for the box class */
+    .box {
+        border: 4px solid green;
+        padding: 10px;
+        margin-bottom: 10px;
+        width: 350px; /* Set the width of the box */
+        height: 300px; /* Set the height of the box */
+        background-color: white;
+    }
+
+    h1 {
+        font-size: 60px;
+    }
+</style>
+<center>
+    <div>
+        <h1>{{ friend.username }}'s Plant Portfolio</h1>
+        <ul>
+            {% if friend_plants|length == 0 %}
+            <p>No plants in the portfolio!</p>
+            {% else %}
+            <li>
+                {% for plant in friend_plants %}
+                <div class="box">
+                    <h3 id="plant_name_{{plant.id}}">{{plant.plnt_name}}</h3>
+                    <img src= "{{ plant.image }}" alt="Plant Image" style="width: 200px; height: 150px;">
+                </div>
+                {% endfor %}
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</center>
+{% endblock %}

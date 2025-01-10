@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <script>
+        function calculate(){
+            let num1 = parseFloat(document.getElementById('num1').value);
+            let num2 = parseFloat(document.getElementById('num2').value);
+            const operation = document.querySelector('input[name="operation"]:checked').value;
+            let result = 0;
+            if (operation == "add"){
+                result = num1 + num2;
+            }
+            else if (operation == "subtract"){
+                result = num1-num2;
+            }
+            else if (operation == "multiply"){
+                result = num1*num2;
+            }
+            else if (operation == "divide"){
+                if (num2 == 0){
+                    alert("Don't be silly! You can't divide by zero!")
+                    return null;
+                }
+                result = num1/num2;
+            }
+            if (result != null){
+                document.getElementById('result').textContent = `Result: ${result}`;
+            }
+            
+        }
+        
+        document.addEventListener("DOMContentLoaded", function(){
+            const inputFields = document.querySelectorAll('input[type="text"]');
+            inputFields.forEach(field => {
+                field.addEventListener('input', calculate);
+            });
+
+            const radioButtons = document.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', calculate);
+            });
+        });
+    </script>
+</head>
+<body>
+    <form name = "input" method = "GET">
+        First Num: <input type = "text" id = "num1" name = "num1">
+        Second Num: <input type = "text" id = "num2" name = "num2">
+        <p>
+            <input type="radio" name="operation" value="add" id="addNum"><label for="addNum">Add</label>
+            <input type="radio" name="operation" value="subtract" id="subtractNum"><label for="subtractNum">Subtract</label>
+            <input type="radio" name="operation" value="multiply" id="multiplyNum"><label for="multiplyNum">Multiply</label>
+            <input type="radio" name="operation" value="divide" id="divideNum"><label for="divideNum">Divide</label>
+        </p>
+        <p>
+            <input type="reset" value = "Delete">
+        </p>
+        <p id ="result"></p>
+    </form>
+</body>
+</html>

@@ -1,0 +1,11 @@
+body{
+    font-family: 'Shadows Into Light';
+    align-items: center;
+    justify-content: center; /* Horizontally center the container */
+}
+.center-container{
+    margin: 0; /* Remove default margin */
+    display: flex;
+    align-items: center; /* Vertically center the container */
+    justify-content: center; /* Horizontally center the container */
+}

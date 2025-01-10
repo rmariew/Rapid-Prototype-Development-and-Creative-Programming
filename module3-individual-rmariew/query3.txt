@@ -1,0 +1,12 @@
+MariaDB [wustl]> select students.id, students.first_name, 
+students.last_name, grade from grades join students on 
+(grades.student_id=students.id)
+    -> where grades.course_code = '330S';
++-----+------------+-----------+--------+
+| id  | first_name | last_name | grade  |
++-----+------------+-----------+--------+
+|  88 | Ben        | Harper    |  35.50 |
+| 115 | Marc       | Roberge   |  75.00 |
+| 202 | Matt       | Freeman   | 100.00 |
++-----+------------+-----------+--------+
+3 rows in set (0.00 sec)

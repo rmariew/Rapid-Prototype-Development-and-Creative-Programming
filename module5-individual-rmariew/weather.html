@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link rel="stylesheet" type="text/css" href="weather.css" />
+    <script>
+        function fetchWeather(){
+            const xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", "https://classes.engineering.wustl.edu/cse330/content/weather_json.php", true);
+            xmlHttp.addEventListener("load", myCallbackFunction, false);
+            xmlHttp.send(null);
+        }
+
+        function myCallbackFunction(event){
+            let info = event.target.responseText;
+            let jsonData = JSON.parse(info);
+            let city = jsonData.location.city;
+            let state = jsonData.location.state;
+            let humidity = jsonData.atmosphere.humidity;
+            let currentTemp = jsonData.current.temp;
+            let tomImage = jsonData.tomorrow.code;
+            let dayAfterImage = jsonData.dayafter.code;
+
+            let cityDisplay = "<strong>" +  city + "</strong>";
+            document.getElementsByClassName("weather-loc")[0].innerHTML = cityDisplay + " " + state;
+            document.getElementsByClassName("weather-humidity")[0].innerHTML = humidity;
+            document.getElementsByClassName("weather-temp")[0].innerHTML = currentTemp;
+            let linkOne = "http://us.yimg.com/i/us/nws/weather/gr/" + tomImage + "ds.png";
+            let linkTwo = "http://us.yimg.com/i/us/nws/weather/gr/" + dayAfterImage + "ds.png";
+            document.getElementsByClassName("weather-tomorrow")[0].src = linkOne;
+            document.getElementsByClassName("weather-dayaftertomorrow")[0].src = linkTwo;
+        }
+
+        document.addEventListener("DOMContentLoaded", fetchWeather, false);
+    </script>
+</head>
+<body>
+    <form>
+        <input name = "submit" type = "button" id = "weather" value = "Update Weather">
+    </form>
+    <div class="weather" id="weatherWidget">
+        <div class="weather-loc"></div>
+        <div class="weather-humidity"></div>
+        <div class="weather-temp"></div>
+        <img class="weather-tomorrow" />
+        <img class="weather-dayaftertomorrow" />
+    </div>
+    <script>
+        document.getElementById("weather").addEventListener("click", fetchWeather, false);
+    </script>
+</body>
+</html>
